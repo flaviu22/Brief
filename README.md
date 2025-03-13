@@ -1,5 +1,4 @@
-C++/MFC application that use 
-https://github.com/flaviu22/domtree
+C++/MFC application that uses https://github.com/flaviu22/domtree
 
 ![image](https://github.com/user-attachments/assets/0d6e9be7-1fb3-4c74-bef4-737c378a531b)
 
