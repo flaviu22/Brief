@@ -205,10 +205,12 @@ void CMainFrame::OnTimer(UINT_PTR nIDEvent)
 		{
 			ShowWindow(SW_RESTORE);
 			ForceForegroundWindow();
+			SetTimer(ID_TIMER_MOVE, theApp.GetProfileInt(_T("Settings"), _T("MoveIntervalSeconds"), 77) * 1000, nullptr);
 		}
 		else
 		{
 			ShowWindow(SW_MINIMIZE);
+			SetTimer(ID_TIMER_MOVE, theApp.GetProfileInt(_T("Settings"), _T("MoveIntervalSecondsIconic"), 3) * 1000, nullptr);
 		}
 	}
 
