@@ -59,34 +59,6 @@ private:
 	std::array<std::thread, 3> m_threads{};
 
 private:
-	struct SDialogModalHelper
-	{
-		SDialogModalHelper(BOOL bMove)
-			: m_bMove(bMove)
-		{
-			AfxGetMainWnd()->KillTimer(ID_TIMER_MOVE);
-		}
-
-		~SDialogModalHelper()
-		{
-			if (m_bMove)
-				AfxGetMainWnd()->SetTimer(ID_TIMER_MOVE, theApp.GetProfileInt(_T("Settings"), _T("MoveIntervalSeconds"), 77) * 1000, nullptr);
-
-			if (IDOK == m_nModalID)
-				::PostMessage(AfxGetMainWnd()->GetSafeHwnd(), WM_COMMAND, ID_VIEW_REFRESH, 0);
-		}
-
-		SDialogModalHelper(const SDialogModalHelper&) = delete;
-		SDialogModalHelper& operator=(const SDialogModalHelper&) = delete;
-		SDialogModalHelper(SDialogModalHelper&&) = delete;
-		SDialogModalHelper& operator=(SDialogModalHelper&&) = delete;
-
-	public:
-		UINT_PTR m_nModalID{ 0 };
-		BOOL m_bMove{ FALSE };
-	};
-
-private:
 	void GetWeather(const CBriefView* pView);
 	void GetGoogleTrends(const CBriefView* pView);
 	void GetYoutubeTrends(const CBriefView* pView);
@@ -97,6 +69,43 @@ private:
 	CString GetYoutubeTrendsAddress() const;
 	CString GetToday() const;
 	CString GetYesterday() const;
+
+private:
+	template <typename T>
+	class CDialogModalHelper
+	{
+	public:
+		CDialogModalHelper(std::unique_ptr<T> pDialog, BOOL bMove)
+			: m_pDialog(std::move(pDialog))
+			, m_bMove(bMove)
+		{
+			AfxGetMainWnd()->KillTimer(ID_TIMER_MOVE);
+		}
+
+		void DoModal() const
+		{
+			m_nModalID = m_pDialog->DoModal();
+		}
+
+		~CDialogModalHelper()
+		{
+			if (m_bMove)
+				AfxGetMainWnd()->SetTimer(ID_TIMER_MOVE, theApp.GetProfileInt(_T("Settings"), _T("MoveIntervalSeconds"), 77) * 1000, nullptr);
+
+			if (IDOK == m_nModalID)
+				::PostMessage(AfxGetMainWnd()->GetSafeHwnd(), WM_COMMAND, ID_VIEW_REFRESH, 0);
+		}
+
+		CDialogModalHelper(const CDialogModalHelper&) = delete;
+		CDialogModalHelper& operator=(const CDialogModalHelper&) = delete;
+		CDialogModalHelper(CDialogModalHelper&&) = delete;
+		CDialogModalHelper& operator=(CDialogModalHelper&&) = delete;
+
+	private:
+		std::unique_ptr<T> m_pDialog{ nullptr };
+		mutable UINT_PTR m_nModalID{ 0 };
+		BOOL m_bMove{ FALSE };
+	};
 
 // Implementation
 public:

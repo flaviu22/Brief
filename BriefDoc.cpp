@@ -99,45 +99,40 @@ void CBriefDoc::OnEditMovetime()
 {
 	// TODO: Add your command handler code here
 
-	CMoveDlg dlg;
-	SDialogModalHelper dlg_helper{ m_bMove };
-	dlg_helper.m_nModalID = dlg.DoModal();
+	CDialogModalHelper<CMoveDlg> dlg(std::make_unique<CMoveDlg>(), m_bMove);
+	dlg.DoModal();
 }
 
 void CBriefDoc::OnEditWeatherLocation()
 {
 	// TODO: Add your command handler code here
 
-	CWeatherLocationDlg dlg(this);
-	SDialogModalHelper dlg_helper{ m_bMove };
-	dlg_helper.m_nModalID = dlg.DoModal();
+	CDialogModalHelper<CWeatherLocationDlg> dlg(std::make_unique<CWeatherLocationDlg>(this), m_bMove);
+	dlg.DoModal();
 }
 
 void CBriefDoc::OnEditTimeZone()
 {
 	// TODO: Add your command handler code here
 
-	CTimeZoneDlg dlg;
-	SDialogModalHelper dlg_helper{ m_bMove };
-	dlg_helper.m_nModalID = dlg.DoModal();
+	CDialogModalHelper<CTimeZoneDlg> dlg(std::make_unique<CTimeZoneDlg>(), m_bMove);
+	dlg.DoModal();
 }
 
 void CBriefDoc::OnEditTrendsLocation()
 {
 	// TODO: Add your command handler code here
 
-	CTrendsLocationDlg dlg;
-	SDialogModalHelper dlg_helper{ m_bMove };
-	dlg_helper.m_nModalID = dlg.DoModal();
+	CDialogModalHelper<CTrendsLocationDlg> dlg(std::make_unique<CTrendsLocationDlg>(), m_bMove);
+	dlg.DoModal();
 }
 
 void CBriefDoc::OnEditSettings()
 {
 	// TODO: Add your command handler code here
 
-	CSettingsDlg dlg;
-	SDialogModalHelper dlg_helper{ m_bMove };
-	dlg_helper.m_nModalID = dlg.DoModal();
+	CDialogModalHelper<CSettingsDlg> dlg(std::make_unique<CSettingsDlg>(), m_bMove);
+	dlg.DoModal();
 }
 
 bool CBriefDoc::LoadingPageExists() const
