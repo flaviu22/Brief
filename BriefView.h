@@ -67,7 +67,6 @@ protected:
 	afx_msg void OnViewRefresh();
 	afx_msg LRESULT OnThreadData(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnPostInit(WPARAM wParam, LPARAM lParam);
-public:
 };
 
 #ifndef _DEBUG  // debug version in BriefView.cpp

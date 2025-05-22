@@ -192,13 +192,12 @@ std::pair<std::string, std::string> CBriefDoc::GetEndpointResponse(
 
 	try
 	{
-		char buffer[1025];
+		char buffer[4096];	// 4KB buffer
 		std::unique_ptr<CStdioFile> file{ session.OpenURL(sAddress, 1,
 			INTERNET_FLAG_TRANSFER_ASCII | INTERNET_FLAG_DONT_CACHE) };
-		while (UINT nRead = file->Read(buffer, sizeof(buffer) - 1))
+		while (UINT nRead = file->Read(buffer, sizeof(buffer)))
 		{
-			buffer[nRead] = '\0';
-			data += buffer;
+			data.append(buffer, nRead);
 			if (m_abort.load())
 				break;
 		}

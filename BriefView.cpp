@@ -202,10 +202,12 @@ void CBriefView::OnUpdateFileKeep(CCmdUI* pCmdUI)
 
 void CBriefView::Refresh()
 {
-	if (0 != m_InternetDataStatus.count())
-		return;	// not all threads are done
+	if (m_InternetDataStatus.any())
+		return;	// at least of a thread is still running
 
 	SetTimer(ID_TIMER_GETDATA, 13 * TIME_MINUTE, nullptr);
+
+	m_InternetDataStatus.set();
 
 	CBriefDoc* pDoc = GetDocument();
 	pDoc->InitializeDownload();
@@ -251,21 +253,20 @@ LRESULT CBriefView::OnThreadData(WPARAM wParam, LPARAM lParam)
 		break;
 	case MESSAGE_GETWEATHER_DONE:
 		pDoc->JointThread(0);
-		m_InternetDataStatus.set(0);
+		m_InternetDataStatus.reset(0);
 		break;
 	case MESSAGE_GETGOOGLETRENDS_DONE:
 		pDoc->JointThread(1);
-		m_InternetDataStatus.set(1);
+		m_InternetDataStatus.reset(1);
 		break;
 	case MESSAGE_GETYOUTUBETRENDS_DONE:
 		pDoc->JointThread(2);
-		m_InternetDataStatus.set(2);
+		m_InternetDataStatus.reset(2);
 		break;
 	}
 
-	if (m_InternetDataStatus.all())
+	if (m_InternetDataStatus.none())
 	{
-		m_InternetDataStatus.reset();
 		if (!pDoc->IsDownloadAborted())
 		{
 			DoPageRefresh();
