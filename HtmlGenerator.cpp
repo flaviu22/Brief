@@ -1,11 +1,10 @@
 #include "pch.h"
 #include "Brief.h"
 #include "HtmlGenerator.h"
-#include "DataList.h"
+#include "HtmlData.h"
 
 std::string CHtmlGenerator::GenerateHtml(
 	const bool move, 
-	const bool keep, 
 	SWeather weather, 
 	std::vector<STrendItem> google_trends, 
 	std::vector<STrendItem> youtube_trends, 
@@ -15,7 +14,7 @@ std::string CHtmlGenerator::GenerateHtml(
 
 	const auto body = GenerateHeader(dom);
 	const auto splitleft = GenerateSplitLeft(body);
-	GenerateCustom(splitleft, move, keep);
+	GenerateCustom(splitleft, move);
 	if (weather.daily.size() > 0)
 		GenerateWeather(splitleft, std::move(weather));
 	const auto splitright = GenerateSplitRight(body);
@@ -33,6 +32,7 @@ Tag* CHtmlGenerator::GenerateHeader(CDomTree& dom) const
 	head.AddChild({ "meta", { {{"http-equiv"}, {"content-type"}}, {{"content"}, {"text/html; charset=utf-8"}} } });
 	head.AddChild({ "meta", { {{"name"}, {"viewport"}}, {{"content"}, {"width=device-width, initial-scale=1"}} } });
 	head.AddChild({ "style", std::move(html_style.data()) });
+	head.AddChild({ "script", std::move(html_script.data()) });
 
 	Tag html("html");
 	html.AddAttributes({ {{"lang"}, {"en"}} });
@@ -49,11 +49,11 @@ Tag* CHtmlGenerator::GenerateSplitLeft(Tag* parent) const
 	return parent->m_childs.back().get();
 }
 
-void CHtmlGenerator::GenerateCustom(Tag* parent, const bool move, const bool keep) const
+void CHtmlGenerator::GenerateCustom(Tag* parent, const bool move) const
 {
 	parent->m_childs.push_back(std::make_shared<Tag>(GenerateCustomDiv()));
 	parent->m_childs.push_back(std::make_shared<Tag>(GenerateCustomMove(move)));
-	parent->m_childs.push_back(std::make_shared<Tag>(GenerateCustomKeep(keep)));
+//	parent->m_childs.push_back(std::make_shared<Tag>(GenerateCustomKeep(keep)));
 }
 
 void CHtmlGenerator::GenerateWeatherCurrent(Tag* parent, const SWeather& weather) const
@@ -182,7 +182,7 @@ void CHtmlGenerator::SetCustomDivs(CDomTree& dom)
 	auto tag = FindSplitLeft(dom.GetTags());
 	if (tag)
 	{
-		tag->m_childs.insert(tag->m_childs.begin(), std::make_shared<Tag>(GenerateCustomKeep(false)));
+//		tag->m_childs.insert(tag->m_childs.begin(), std::make_shared<Tag>(GenerateCustomKeep(false)));
 		tag->m_childs.insert(tag->m_childs.begin(), std::make_shared<Tag>(GenerateCustomMove(false)));
 		tag->m_childs.insert(tag->m_childs.begin(), std::make_shared<Tag>(GenerateCustomDiv()));
 	}

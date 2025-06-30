@@ -51,6 +51,7 @@ public:
 protected:
 	void OnDraw(CDC* pDC);
 	void DoPageRefresh();
+	BOOL CallClientScript(LPCTSTR pStrFuncName, CStringArray* pArrFuncArgs, CComVariant* pOutVarRes);
 
 private:
 	BOOL m_bInit{ FALSE };

@@ -169,12 +169,8 @@ bool CBriefDoc::CreateIndexPage()
 	if (ofs.is_open())
 	{
 		CHtmlGenerator hg{ GetCurrentPath() + "/icons/" };
-		ofs << hg.GenerateHtml(
-			m_bMove, m_bKeep, 
-			std::move(m_weather), 
-			std::move(m_gtrends), 
-			std::move(m_ytrends), 
-			theApp.GetProfileInt(_T("Settings"), _T("TimeZoneCityId"), 4254));
+		ofs << hg.GenerateHtml(m_bMove, std::move(m_weather), std::move(m_gtrends), std::move(m_ytrends), 
+								theApp.GetProfileInt(_T("Settings"), _T("TimeZoneCityId"), 4254));
 	}
 
 	if (ofs.bad())

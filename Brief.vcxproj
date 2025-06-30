@@ -200,9 +200,9 @@
     <ClInclude Include="ComboBoxExt.h" />
     <ClInclude Include="ComboBoxExtList.h" />
     <ClInclude Include="Data.h" />
-    <ClInclude Include="DataList.h" />
     <ClInclude Include="DomTree.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="HtmlData.h" />
     <ClInclude Include="HtmlGenerator.h" />
     <ClInclude Include="LocationDlg.h" />
     <ClInclude Include="MainFrm.h" />

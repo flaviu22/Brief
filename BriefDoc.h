@@ -23,7 +23,7 @@ protected: // create from serialization only
 // Attributes
 public:
 	BOOL m_bMove{ FALSE };
-	BOOL m_bKeep{ FALSE };
+//	BOOL m_bKeep{ FALSE };
 	mutable CString m_sError{};
 
 public:

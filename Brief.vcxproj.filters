@@ -51,9 +51,6 @@
     <ClInclude Include="ComboBoxExtList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DataList.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="DomTree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -88,6 +85,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="WeatherLocationDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HtmlData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

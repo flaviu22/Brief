@@ -24,7 +24,6 @@ public:
 public:
 	std::string GenerateHtml(
 		const bool move, 
-		const bool keep, 
 		SWeather weather, 
 		std::vector<STrendItem> google_trends, 
 		std::vector<STrendItem> youtube_trends, 
@@ -34,7 +33,7 @@ public:
 private:
 	Tag* GenerateHeader(CDomTree& dom) const;
 	Tag* GenerateSplitLeft(Tag* parent) const;
-	void GenerateCustom(Tag* parent, const bool move, const bool keep) const;
+	void GenerateCustom(Tag* parent, const bool move) const;
 	void GenerateWeatherCurrent(Tag* parent, const SWeather& weather) const;
 	void GenerateWeatherHourly(Tag* parent, std::vector<SWeatherHourly> hours) const;
 	void GenerateWeatherDaily(Tag* parent, std::vector<SWeatherDaily> days) const;

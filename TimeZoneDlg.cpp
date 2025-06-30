@@ -5,7 +5,7 @@
 #include "Brief.h"
 #include "afxdialogex.h"
 #include "TimeZoneDlg.h"
-#include "DataList.h"
+#include "HtmlData.h"
 
 // CTimeZoneDlg dialog
 

@@ -23,7 +23,7 @@ IMPLEMENT_DYNCREATE(CBriefView, CHtmlView)
 BEGIN_MESSAGE_MAP(CBriefView, CHtmlView)
 	ON_WM_TIMER()
 	ON_COMMAND(ID_FILE_MOVE, &CBriefView::OnFileMove)
-	ON_COMMAND(ID_FILE_KEEP, &CBriefView::OnFileKeep)
+//	ON_COMMAND(ID_FILE_KEEP, &CBriefView::OnFileKeep)
 	ON_COMMAND(ID_VIEW_REFRESH, &CBriefView::OnViewRefresh)
 	ON_UPDATE_COMMAND_UI(ID_FILE_KEEP, &CBriefView::OnUpdateFileKeep)
 	ON_MESSAGE(WMU_THREADDATA, &CBriefView::OnThreadData)
@@ -40,8 +40,8 @@ CBriefView::CBriefView() noexcept
 
 CBriefView::~CBriefView()
 {
-	if (GetDocument()->m_bKeep)
-		SetThreadExecutionState(ES_CONTINUOUS);
+//	if (GetDocument()->m_bKeep)
+//		SetThreadExecutionState(ES_CONTINUOUS);
 }
 
 void CBriefView::DoDataExchange(CDataExchange* pDX)
@@ -167,22 +167,33 @@ void CBriefView::OnFileMove()
 {
 	// TODO: Add your command handler code here
 
+	CComVariant varRes;
+	CStringArray arrArgs;
 	CBriefDoc* pDoc = GetDocument();
 	pDoc->m_bMove = !pDoc->m_bMove;
 
 	if (pDoc->m_bMove)
+	{
 		AfxGetMainWnd()->SetTimer(ID_TIMER_MOVE, theApp.GetProfileInt(_T("Settings"), _T("MoveIntervalSeconds"), 77) * 1000, nullptr);
+		arrArgs.Add(L"ON");
+	}
 	else
+	{
 		AfxGetMainWnd()->KillTimer(ID_TIMER_MOVE);
+		arrArgs.Add(L"OFF");
+	}
 
-	Refresh();
+//	Refresh();
+
+	if (!CallClientScript(L"Move", &arrArgs, &varRes))
+		pDoc->m_sError = _T("Failed to call Move client script function");
 }
 
 void CBriefView::OnFileKeep()
 {
 	// TODO: Add your command handler code here
 
-	CBriefDoc* pDoc = GetDocument();
+/*	CBriefDoc* pDoc = GetDocument();
 	pDoc->m_bKeep = !pDoc->m_bKeep;
 
 	if (pDoc->m_bKeep)
@@ -190,7 +201,7 @@ void CBriefView::OnFileKeep()
 	else
 		SetThreadExecutionState(ES_CONTINUOUS);
 
-	Refresh();
+	Refresh();*/
 }
 
 void CBriefView::OnUpdateFileKeep(CCmdUI* pCmdUI)
@@ -275,4 +286,63 @@ LRESULT CBriefView::OnThreadData(WPARAM wParam, LPARAM lParam)
 	}
 
 	return 0;
+}
+
+BOOL CBriefView::CallClientScript(LPCTSTR pStrFuncName, CStringArray* pArrFuncArgs, CComVariant* pOutVarRes)
+{
+	//Call client function in HTML
+	//'pStrFuncName' = client script function name
+	//'pArrFuncArgs' = if not NULL, list of arguments
+	//'pOutVarRes' = if not NULL, will receive the return value
+	// RETURN:
+	// = TRUE if done
+	BOOL bRes{ FALSE };
+	CComVariant vaResult{};
+	CComPtr<IHTMLDocument2> spDoc2{};
+	const auto spDisp = GetHtmlDocument();
+	if (spDisp && SUCCEEDED(spDisp->QueryInterface(IID_IHTMLDocument2, reinterpret_cast<void**>(&spDoc2))))
+	{
+		CComPtr<IDispatch> spScript{};
+		if (SUCCEEDED(spDoc2->get_Script(&spScript)))
+		{
+			DISPID dispid{ NULL };
+			//Find dispid for given function in the object
+			CComBSTR bstrMember{ pStrFuncName };
+			if (SUCCEEDED(spScript->GetIDsOfNames(IID_NULL, &bstrMember, 1, LOCALE_USER_DEFAULT, &dispid)))
+			{
+				const auto arraySize = pArrFuncArgs ? pArrFuncArgs->GetSize() : 0;
+				//Putting parameters
+				DISPPARAMS dispparams;
+				memset(&dispparams, 0, sizeof dispparams);
+				dispparams.cArgs = static_cast<UINT>(arraySize);
+				dispparams.rgvarg = new VARIANT[dispparams.cArgs];
+				dispparams.cNamedArgs = 0;
+
+				for (int i = 0; i < arraySize; ++i)
+				{
+					CComBSTR bstr = static_cast<CComBSTR>(pArrFuncArgs->GetAt(arraySize - 1 - i));	// back reading
+					bstr.CopyTo(&dispparams.rgvarg[i].bstrVal);
+					dispparams.rgvarg[i].vt = VT_BSTR;
+				}
+
+				EXCEPINFO excepInfo;
+				memset(&excepInfo, 0, sizeof excepInfo);
+				UINT nArgErr = (UINT)-1;  // initialize to invalid arg
+				//Call JavaScript function       
+				if (SUCCEEDED(spScript->Invoke(dispid, IID_NULL, 0, DISPATCH_METHOD,
+												&dispparams, &vaResult, &excepInfo, &nArgErr)))
+				{
+					//Done!
+					bRes = TRUE;
+				}
+				//Free mem
+				delete[] dispparams.rgvarg;
+			}
+		}
+	}
+
+	if (pOutVarRes)
+		*pOutVarRes = vaResult;
+
+	return bRes;
 }
