@@ -64,7 +64,6 @@ protected:
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	afx_msg void OnFileMove();
 	afx_msg void OnFileKeep();
-	afx_msg void OnUpdateFileKeep(CCmdUI* pCmdUI);
 	afx_msg void OnViewRefresh();
 	afx_msg LRESULT OnThreadData(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnPostInit(WPARAM wParam, LPARAM lParam);

@@ -25,7 +25,6 @@ BEGIN_MESSAGE_MAP(CBriefView, CHtmlView)
 	ON_COMMAND(ID_FILE_MOVE, &CBriefView::OnFileMove)
 //	ON_COMMAND(ID_FILE_KEEP, &CBriefView::OnFileKeep)
 	ON_COMMAND(ID_VIEW_REFRESH, &CBriefView::OnViewRefresh)
-	ON_UPDATE_COMMAND_UI(ID_FILE_KEEP, &CBriefView::OnUpdateFileKeep)
 	ON_MESSAGE(WMU_THREADDATA, &CBriefView::OnThreadData)
 	ON_MESSAGE(WMU_POSTINIT, &CBriefView::OnPostInit)
 END_MESSAGE_MAP()
@@ -183,8 +182,6 @@ void CBriefView::OnFileMove()
 		arrArgs.Add(L"OFF");
 	}
 
-//	Refresh();
-
 	if (!CallClientScript(L"Move", &arrArgs, &varRes))
 		pDoc->m_sError = _T("Failed to call Move client script function");
 }
@@ -202,13 +199,6 @@ void CBriefView::OnFileKeep()
 		SetThreadExecutionState(ES_CONTINUOUS);
 
 	Refresh();*/
-}
-
-void CBriefView::OnUpdateFileKeep(CCmdUI* pCmdUI)
-{
-	// TODO: Add your command update UI handler code here
-
-	pCmdUI->Enable(FALSE);
 }
 
 void CBriefView::Refresh()
