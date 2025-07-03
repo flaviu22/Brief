@@ -204,7 +204,7 @@ void CBriefView::OnFileKeep()
 void CBriefView::Refresh()
 {
 	if (m_InternetDataStatus.any())
-		return;	// at least of a thread is still running
+		return;	// at least one thread is still running
 
 	SetTimer(ID_TIMER_GETDATA, 13 * TIME_MINUTE, nullptr);
 

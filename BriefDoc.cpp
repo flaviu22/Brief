@@ -402,7 +402,7 @@ CString CBriefDoc::GetYoutubeTrendsAddress() const
 						_T("&chart=mostPopular")
 //						_T("&order=date")
 						_T("&publishedAfter=%s")
-						_T("&publishedBefore=%s"),
+						_T("&publishedBefore=%s&q=AI"),
 					theApp.GetProfileString(_T("Settings"), _T("GoogleApisKey")),
 					theApp.GetProfileString(_T("Settings"), _T("TrendsLocation"), _T("GB")),
 					theApp.GetProfileInt(_T("Settings"), _T("YoutubeMaxResults"), 10),
