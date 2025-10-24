@@ -395,7 +395,7 @@ std::vector<SWeatherLocation> CBriefDoc::GetWeatherLoc(const CString& sText) con
 CString CBriefDoc::GetYoutubeTrendsAddress() const
 {
 	CString sAddress;
-	sAddress.Format(_T("https://www.googleapis.com/youtube/v3/search?key=%s")
+/*	sAddress.Format(_T("https://www.googleapis.com/youtube/v3/search?key=%s")
 						_T("&part=snippet,id&regionCode=%s")
 						_T("&maxResults=%d")
 						_T("&type=video")
@@ -408,7 +408,16 @@ CString CBriefDoc::GetYoutubeTrendsAddress() const
 					theApp.GetProfileString(_T("Settings"), _T("TrendsLocation"), _T("GB")),
 					theApp.GetProfileInt(_T("Settings"), _T("YoutubeMaxResults"), 10),
 					GetYesterday(),
-					GetToday());
+					GetToday());*/
+
+	sAddress.Format(_T("https://www.googleapis.com/youtube/v3/videos?key=%s")
+		_T("&part=snippet,id,contentDetails,statistics&regionCode=%s")
+		_T("&maxResults=%d")
+		_T("&type=video")
+		_T("&chart=mostPopular"),
+		theApp.GetProfileString(_T("Settings"), _T("GoogleApisKey")),
+		theApp.GetProfileString(_T("Settings"), _T("TrendsLocation"), _T("GB")),
+		theApp.GetProfileInt(_T("Settings"), _T("YoutubeMaxResults"), 10));
 	TRACE(_T("Youtube address: %s\n"), sAddress);
 	return sAddress;
 }

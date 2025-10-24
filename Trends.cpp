@@ -199,16 +199,10 @@ std::vector<STrendItem> CTrends::PopulateYoutubeTrends(const rapidjson::Document
 				STrendItem trend{};
 				for (const auto& sub : item.GetObj())
 				{
-					if ("id" == sub.name && sub.value.IsObject())
+					if ("id" == sub.name && sub.value.IsString())
 					{
-						for (const auto& ids : sub.value.GetObj())
-						{
-							if ("videoId" == ids.name && ids.value.IsString())
-							{
-								trend.video_id = ids.value.GetString();
-								continue;
-							}
-						}
+						trend.video_id = sub.value.GetString();
+						continue;
 					}
 					if ("snippet" == sub.name && sub.value.IsObject())
 					{
