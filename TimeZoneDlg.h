@@ -24,10 +24,10 @@ protected:
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+	virtual BOOL OnInitDialog();
+	virtual void OnOK();
 
 // Generated message map functions
 protected:
 	DECLARE_MESSAGE_MAP()
-	virtual BOOL OnInitDialog();
-	virtual void OnOK();
 };

@@ -217,17 +217,26 @@ std::pair<std::string, std::string> CBriefDoc::GetEndpointResponse(
 
 void CBriefDoc::StartGettingWeather(const CBriefView* pView)
 {
-	m_threads[0] = std::thread(&CBriefDoc::GetWeather, this, pView);
+	if (theApp.GetProfileInt(_T("Settings"), _T("StopWeather"), 0))
+		::PostMessage(pView->GetSafeHwnd(), WMU_THREADDATA, MESSAGE_GETWEATHER_DONE, 0);
+	else
+		m_threads[0] = std::thread(&CBriefDoc::GetWeather, this, pView);
 }
 
 void CBriefDoc::StartGettingGoogleTrends(const CBriefView* pView)
 {
-	m_threads[1] = std::thread(&CBriefDoc::GetGoogleTrends, this, pView);
+	if (theApp.GetProfileInt(_T("Settings"), _T("StopGoogle"), 0))
+		::PostMessage(pView->GetSafeHwnd(), WMU_THREADDATA, MESSAGE_GETGOOGLETRENDS_DONE, 0);
+	else
+		m_threads[1] = std::thread(&CBriefDoc::GetGoogleTrends, this, pView);
 }
 
 void CBriefDoc::StartGettingYoutubeTrends(const CBriefView* pView)
 {
-	m_threads[2] = std::thread(&CBriefDoc::GetYoutubeTrends, this, pView);
+	if (theApp.GetProfileInt(_T("Settings"), _T("StopYoutube"), 0))
+		::PostMessage(pView->GetSafeHwnd(), WMU_THREADDATA, MESSAGE_GETYOUTUBETRENDS_DONE, 0);
+	else
+		m_threads[2] = std::thread(&CBriefDoc::GetYoutubeTrends, this, pView);
 }
 
 void CBriefDoc::JointThread(const size_t pos)

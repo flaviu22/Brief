@@ -1,6 +1,6 @@
 #pragma once
 #include "afxdialogex.h"
-
+#include <bitset>
 
 // CSettingsDlg dialog
 
@@ -18,7 +18,7 @@ public:
 #endif
 
 protected:
-	HICON m_hIcon;
+	HICON m_hIcon{};
 	CString m_sWeatherapiKey;
 	CString m_sGoogleapisKey;
 	CString m_sTrendsAddress;
@@ -31,4 +31,7 @@ protected:
 	// Generated message map functions
 protected:
 	DECLARE_MESSAGE_MAP()
+    afx_msg void OnEnChangeEditWeatherapikey();
+    afx_msg void OnEnChangeEditTrendsaddress();
+    afx_msg void OnEnChangeEditGoogleapiskey();
 };
