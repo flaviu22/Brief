@@ -75,9 +75,10 @@ private:
 	class CDialogModalHelper
 	{
 	public:
-		CDialogModalHelper(std::unique_ptr<T> pDialog, BOOL bMove)
+		CDialogModalHelper(std::unique_ptr<T> pDialog, BOOL bMove, BOOL bRefresh = TRUE)
 			: m_pDialog(std::move(pDialog))
 			, m_bMove(bMove)
+			, m_bRefresh(bRefresh)
 		{
 			AfxGetMainWnd()->KillTimer(ID_TIMER_MOVE);
 		}
@@ -92,7 +93,7 @@ private:
 			if (m_bMove)
 				AfxGetMainWnd()->SetTimer(ID_TIMER_MOVE, theApp.GetProfileInt(_T("Settings"), _T("MoveIntervalSeconds"), 77) * 1000, nullptr);
 
-			if (IDOK == m_nModalID)
+			if (IDOK == m_nModalID && m_bRefresh)
 				::PostMessage(AfxGetMainWnd()->GetSafeHwnd(), WM_COMMAND, ID_VIEW_REFRESH, 0);
 		}
 
@@ -105,6 +106,7 @@ private:
 		std::unique_ptr<T> m_pDialog{ nullptr };
 		mutable UINT_PTR m_nModalID{ 0 };
 		BOOL m_bMove{ FALSE };
+		BOOL m_bRefresh{ TRUE };
 	};
 
 // Implementation

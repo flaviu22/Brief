@@ -99,7 +99,7 @@ void CBriefDoc::OnEditMovetime()
 {
 	// TODO: Add your command handler code here
 
-	CDialogModalHelper<CMoveDlg> dlg(std::make_unique<CMoveDlg>(), m_bMove);
+	CDialogModalHelper<CMoveDlg> dlg(std::make_unique<CMoveDlg>(), m_bMove, FALSE);
 	dlg.DoModal();
 }
 
