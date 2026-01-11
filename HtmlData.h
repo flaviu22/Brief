@@ -64,7 +64,7 @@ constexpr std::string_view html_style = R"(
 
 			.weather-hourly {
 				float:left;
-				margin-left:11px;
+				margin-left:12px;
 				text-align:center;
 				line-height:50%;
 			/*	border-style:solid;

@@ -91,7 +91,7 @@ void CHtmlGenerator::GenerateWeatherHourly(Tag* parent, std::vector<SWeatherHour
 			const COleDateTimeSpan span = dt - COleDateTime::GetCurrentTime();
 			if (span.GetTotalMinutes() < 30)
 				continue;
-			if (++count > 12)
+			if (++count > theApp.GetProfileInt(_T("Settings"), _T("WeatherHourlyCount"), 11))
 				break;
 
 			Tag div("div");
@@ -105,7 +105,7 @@ void CHtmlGenerator::GenerateWeatherHourly(Tag* parent, std::vector<SWeatherHour
 			div.AddChild({ "p", CStringA(sText).GetString() });
 			sText.Format(_T("%S%d.png"), m_pathIcon.c_str(), hour.icon);
 			div.AddChild({ "img", { {{"src"}, {CStringA(sText).GetString()}} } });
-			sText.Format(_T("%.1f&deg; C"), hour.temperature);
+			sText.Format(_T("%.1f &deg;C"), hour.temperature);
 			div.AddChild({ "p", CStringA(sText).GetString() });
 			parent->AddChild(div);
 		}
@@ -122,7 +122,7 @@ void CHtmlGenerator::GenerateWeatherDaily(Tag* parent, std::vector<SWeatherDaily
 		{
 			if (COleDateTime::GetCurrentTime() >= dt)
 				continue;
-			if (++count > 4)
+			if (++count > theApp.GetProfileInt(_T("Settings"), _T("WeatherDailyCount"), 5))
 				break;
 
 			Tag div("div", { {{"class"}, {"weather-daily"}} });
