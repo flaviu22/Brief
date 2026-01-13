@@ -15,6 +15,8 @@ CSettingsDlg::CSettingsDlg(CWnd* pParent /*=nullptr*/)
 	, m_sWeatherapiKey(_T(""))
 	, m_sTrendsAddress(_T(""))
 	, m_sGoogleapisKey(_T(""))
+	, m_nWeatherHours(0)
+	, m_nWeatherDays(0)
 	, m_hIcon(nullptr)
 {
 }
@@ -25,6 +27,10 @@ void CSettingsDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT_WEATHERAPIKEY, m_sWeatherapiKey);
 	DDX_Text(pDX, IDC_EDIT_TRENDSADDRESS, m_sTrendsAddress);
 	DDX_Text(pDX, IDC_EDIT_GOOGLEAPISKEY, m_sGoogleapisKey);
+	DDX_Text(pDX, IDC_EDIT_WEATHERHOURS, m_nWeatherHours);
+	DDX_Text(pDX, IDC_EDIT_WEATHERDAYS, m_nWeatherDays);
+	DDX_Control(pDX, IDC_SPIN_WEATHERHOURS, m_SpinHours);
+	DDX_Control(pDX, IDC_SPIN_WEATHERDAYS, m_SpinDays);
 }
 
 BEGIN_MESSAGE_MAP(CSettingsDlg, CDialogEx)
@@ -35,6 +41,16 @@ END_MESSAGE_MAP()
 
 // CSettingsDlg message handlers
 
+BOOL CSettingsDlg::PreTranslateMessage(MSG* pMsg)
+{
+	// TODO: Add your specialized code here and/or call the base class
+
+	if (WM_MOUSEMOVE == pMsg->message)
+		m_ToolTip.RelayEvent(pMsg);
+
+	return CDialogEx::PreTranslateMessage(pMsg);
+}
+
 BOOL CSettingsDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
@@ -44,6 +60,10 @@ BOOL CSettingsDlg::OnInitDialog()
 	m_hIcon = AfxGetApp()->LoadIcon(IDI_SETTINGS);
 	SetIcon(m_hIcon, FALSE);
 
+	m_ToolTip.Create(this);
+	m_ToolTip.AddTool(GetDlgItem(IDC_EDIT_WEATHERHOURS), _T("Set the number of forecasted hours (3 - 20)"));
+	m_ToolTip.AddTool(GetDlgItem(IDC_EDIT_WEATHERDAYS), _T("Set the number of forecasted days (1 - 6)"));
+
 	m_sWeatherapiKey = theApp.GetProfileString(_T("Settings"), _T("WeatherApiKey"));
 	m_sGoogleapisKey = theApp.GetProfileString(_T("Settings"), _T("GoogleApisKey"));
 	m_sTrendsAddress = theApp.GetProfileString(_T("Settings"), _T("GoogleTrendsAddress"), _T("https://trends.google.com/trending/rss?geo=GB"));
@@ -51,6 +71,14 @@ BOOL CSettingsDlg::OnInitDialog()
 	CheckDlgButton(IDC_CHECK_WEATHER, theApp.GetProfileInt(_T("Settings"), _T("StopWeather"), 0));
 	CheckDlgButton(IDC_CHECK_GOOGLE, theApp.GetProfileInt(_T("Settings"), _T("StopGoogle"), 0));
 	CheckDlgButton(IDC_CHECK_YOUTUBE, theApp.GetProfileInt(_T("Settings"), _T("StopYoutube"), 0));
+
+	m_SpinHours.SetRange(3, 20);
+	m_SpinHours.SetPos(theApp.GetProfileInt(_T("Settings"), _T("WeatherHours"), 11));
+	m_nWeatherHours = m_SpinHours.GetPos();
+
+	m_SpinDays.SetRange(1, 6);
+	m_SpinDays.SetPos(theApp.GetProfileInt(_T("Settings"), _T("WeatherDays"), 5));
+	m_nWeatherDays = m_SpinDays.GetPos();
 
 	UpdateData(FALSE);
 
@@ -158,6 +186,23 @@ void CSettingsDlg::OnOK()
 	theApp.WriteProfileInt(_T("Settings"), _T("StopWeather"), IsDlgButtonChecked(IDC_CHECK_WEATHER));
 	theApp.WriteProfileInt(_T("Settings"), _T("StopGoogle"), IsDlgButtonChecked(IDC_CHECK_GOOGLE));
 	theApp.WriteProfileInt(_T("Settings"), _T("StopYoutube"), IsDlgButtonChecked(IDC_CHECK_YOUTUBE));
+
+	if (m_SpinHours.GetPos() < 3 || m_SpinHours.GetPos() > 20)
+	{
+		MessageBox(_T("The number of forecasted hours should be between 3 and 20"), nullptr, MB_ICONERROR);
+		GetDlgItem(IDC_EDIT_WEATHERHOURS)->SetFocus();
+		return;
+	}
+
+	if (m_SpinDays.GetPos() < 1 || m_SpinDays.GetPos() > 6)
+	{
+		MessageBox(_T("Rhe number of forecasted days should be between 1 and 6"), nullptr, MB_ICONERROR);
+		GetDlgItem(IDC_EDIT_WEATHERDAYS)->SetFocus();
+		return;
+	}
+
+	theApp.WriteProfileInt(_T("Settings"), _T("WeatherHours"), m_SpinHours.GetPos());
+	theApp.WriteProfileInt(_T("Settings"), _T("WeatherDays"), m_SpinDays.GetPos());
 
 	CDialogEx::OnOK();
 }

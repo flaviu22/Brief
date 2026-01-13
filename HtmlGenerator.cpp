@@ -83,15 +83,18 @@ void CHtmlGenerator::GenerateWeatherCurrent(Tag* parent, const SWeather& weather
 void CHtmlGenerator::GenerateWeatherHourly(Tag* parent, std::vector<SWeatherHourly> hours) const
 {
 	size_t count{};
+	const size_t limit = theApp.GetProfileInt(_T("Settings"), _T("WeatherHours"), 11);
 	for (const auto& hour : hours)
 	{
 		COleDateTime dt;
 		if (dt.ParseDateTime(CString(hour.date.c_str())))
 		{
 			const COleDateTimeSpan span = dt - COleDateTime::GetCurrentTime();
+
 			if (span.GetTotalMinutes() < 30)
 				continue;
-			if (++count > theApp.GetProfileInt(_T("Settings"), _T("WeatherHourlyCount"), 11))
+
+			if (++count > limit)
 				break;
 
 			Tag div("div");
@@ -102,6 +105,7 @@ void CHtmlGenerator::GenerateWeatherHourly(Tag* parent, std::vector<SWeatherHour
 				sText.Format(_T("%d AM"), dt.GetHour());
 			else
 				sText.Format(_T("%d PM"), 12 == dt.GetHour() ? dt.GetHour() : dt.GetHour() - 12);
+
 			div.AddChild({ "p", CStringA(sText).GetString() });
 			sText.Format(_T("%S%d.png"), m_pathIcon.c_str(), hour.icon);
 			div.AddChild({ "img", { {{"src"}, {CStringA(sText).GetString()}} } });
@@ -115,6 +119,8 @@ void CHtmlGenerator::GenerateWeatherHourly(Tag* parent, std::vector<SWeatherHour
 void CHtmlGenerator::GenerateWeatherDaily(Tag* parent, std::vector<SWeatherDaily> days) const
 {
 	size_t count{};
+	const size_t limit = theApp.GetProfileInt(_T("Settings"), _T("WeatherDays"), 5);
+
 	for (const auto& day : days)
 	{
 		COleDateTime dt;
@@ -122,7 +128,8 @@ void CHtmlGenerator::GenerateWeatherDaily(Tag* parent, std::vector<SWeatherDaily
 		{
 			if (COleDateTime::GetCurrentTime() >= dt)
 				continue;
-			if (++count > theApp.GetProfileInt(_T("Settings"), _T("WeatherDailyCount"), 5))
+
+			if (++count > limit)
 				break;
 
 			Tag div("div", { {{"class"}, {"weather-daily"}} });
@@ -217,7 +224,7 @@ void CHtmlGenerator::GenerateWeather(Tag* parent, SWeather weather) const
 
 void CHtmlGenerator::GenerateGoogleTrends(Tag* parent, std::vector<STrendItem> trends) const
 {
-	for (auto&& it : trends)
+	for (const auto& it : trends)
 	{
 		Tag trends("div", { {{"class"}, {"trends"}} });
 		trends.AddChild({ "div", it.title, { {{"class"}, {"trends-title"}} } });
@@ -240,7 +247,7 @@ void CHtmlGenerator::GenerateGoogleTrends(Tag* parent, std::vector<STrendItem> t
 
 void CHtmlGenerator::GenerateYoutubeTrends(Tag* parent, std::vector<STrendItem> trends) const
 {
-	for (auto&& it : trends)
+	for (const auto& it : trends)
 	{
 		Tag trends("div", { {{"class"}, {"trends"}} });
 		trends.AddChild({ "div", it.title, { {{"class"}, {"trends-title"}} } });
@@ -266,7 +273,7 @@ void CHtmlGenerator::GenerateYoutubeTrends(Tag* parent, std::vector<STrendItem> 
 
 Tag* CHtmlGenerator::FindSplitLeft(std::vector<std::shared_ptr<Tag>>& tags) const
 {
-	for (auto& it : tags)
+	for (const auto& it : tags)
 	{
 		auto found = FindSplitLeft(it->m_childs);
 		if (found)

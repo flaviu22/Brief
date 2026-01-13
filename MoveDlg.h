@@ -14,6 +14,7 @@ protected:
 	HICON m_hIcon;
 	UINT m_nMove;
 	CSpinButtonCtrl m_Spin;
+	CToolTipCtrl m_ToolTip;
 
 // Dialog Data
 #ifdef AFX_DESIGN_TIME
@@ -24,6 +25,7 @@ protected:
 	virtual void OnOK();
 	virtual BOOL OnInitDialog();
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 
 	DECLARE_MESSAGE_MAP()
 };

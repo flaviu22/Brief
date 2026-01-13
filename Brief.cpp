@@ -57,7 +57,6 @@ CBriefApp::CBriefApp() noexcept
 
 CBriefApp theApp;
 
-
 // CBriefApp initialization
 
 BOOL CBriefApp::InitInstance()

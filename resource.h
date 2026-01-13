@@ -59,10 +59,15 @@
 #define IDC_MFCLINK_WEATHER             1013
 #define IDC_MFCLINK_GOOGLEAPIS          1014
 #define IDC_MFCLINK_WEATHER2            1014
+#define IDC_EDIT_WEATHERHOURS           1015
 #define IDC_CHECK_WEATHER               1016
 #define IDC_CHECK_YOUTBE                1017
 #define IDC_CHECK_YOUTUBE               1017
 #define IDC_CHECK_GOOGLE                1018
+#define IDC_EDIT_WEATHERDAYS            1019
+#define IDC_SPIN_WEATHERHOURS           1020
+#define IDC_SPIN_WEATHERHOURS2          1021
+#define IDC_SPIN_WEATHERDAYS            1021
 #define ID_FILE_STARTMOVE               32775
 #define ID_FILE_STOPMO                  32776
 #define ID_FILE_STOPMOVE                32777
@@ -90,7 +95,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        326
 #define _APS_NEXT_COMMAND_VALUE         32806
-#define _APS_NEXT_CONTROL_VALUE         1017
+#define _APS_NEXT_CONTROL_VALUE         1021
 #define _APS_NEXT_SYMED_VALUE           319
 #endif
 #endif

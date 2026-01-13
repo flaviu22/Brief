@@ -28,6 +28,16 @@ END_MESSAGE_MAP()
 
 // CMoveDlg message handlers
 
+BOOL CMoveDlg::PreTranslateMessage(MSG* pMsg)
+{
+	// TODO: Add your specialized code here and/or call the base class
+
+	if (WM_MOUSEMOVE == pMsg->message)
+		m_ToolTip.RelayEvent(pMsg);
+
+	return CDialogEx::PreTranslateMessage(pMsg);
+}
+
 BOOL CMoveDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
@@ -36,6 +46,9 @@ BOOL CMoveDlg::OnInitDialog()
 
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_BriefTYPE);
 	SetIcon(m_hIcon, FALSE);
+
+	m_ToolTip.Create(this);
+	m_ToolTip.AddTool(GetDlgItem(IDC_EDIT_MOVE), _T("Set the time interval (7 - 900 seconds) after which main window automatically minimizes to the taskbar for a few seconds"));
 
 	m_Spin.SetRange(7, 900);
 	m_Spin.SetPos(theApp.GetProfileInt(_T("Settings"), _T("MoveIntervalSeconds"), 77));
