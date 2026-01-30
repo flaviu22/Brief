@@ -66,7 +66,7 @@ BOOL CSettingsDlg::OnInitDialog()
 
 	m_sWeatherapiKey = theApp.GetProfileString(_T("Settings"), _T("WeatherApiKey"));
 	m_sGoogleapisKey = theApp.GetProfileString(_T("Settings"), _T("GoogleApisKey"));
-	m_sTrendsAddress = theApp.GetProfileString(_T("Settings"), _T("GoogleTrendsAddress"), _T("https://trends.google.com/trending/rss?geo=GB"));
+	m_sTrendsAddress = theApp.GetProfileString(_T("Settings"), _T("GoogleTrendsAddress"), GoogleTrendsAddress);
 
 	CheckDlgButton(IDC_CHECK_WEATHER, theApp.GetProfileInt(_T("Settings"), _T("StopWeather"), 0));
 	CheckDlgButton(IDC_CHECK_GOOGLE, theApp.GetProfileInt(_T("Settings"), _T("StopGoogle"), 0));

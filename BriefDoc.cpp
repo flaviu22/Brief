@@ -331,8 +331,7 @@ void CBriefDoc::GetWeather(const CBriefView* pView)
 void CBriefDoc::GetGoogleTrends(const CBriefView* pView)
 {
 	auto output = GetEndpointResponse(
-		theApp.GetProfileString(_T("Settings"), _T("GoogleTrendsAddress"), 
-		_T("https://trends.google.com/trends/trendingsearches/daily/rss?geo=")) +
+		theApp.GetProfileString(_T("Settings"), _T("GoogleTrendsAddress"), GoogleTrendsAddress) +
 		theApp.GetProfileString(_T("Settings"), _T("TrendsLocation"), _T("GB")));
 
 	do
@@ -404,21 +403,6 @@ std::vector<SWeatherLocation> CBriefDoc::GetWeatherLoc(const CString& sText) con
 CString CBriefDoc::GetYoutubeTrendsAddress() const
 {
 	CString sAddress;
-/*	sAddress.Format(_T("https://www.googleapis.com/youtube/v3/search?key=%s")
-						_T("&part=snippet,id&regionCode=%s")
-						_T("&maxResults=%d")
-						_T("&type=video")
-						_T("&chart=mostPopular")
-//						_T("&order=date")
-						_T("&q=*")
-						_T("&publishedAfter=%s")
-						_T("&publishedBefore=%s"), 
-					theApp.GetProfileString(_T("Settings"), _T("GoogleApisKey")),
-					theApp.GetProfileString(_T("Settings"), _T("TrendsLocation"), _T("GB")),
-					theApp.GetProfileInt(_T("Settings"), _T("YoutubeMaxResults"), 10),
-					GetYesterday(),
-					GetToday());*/
-
 	sAddress.Format(_T("https://www.googleapis.com/youtube/v3/videos?key=%s")
 		_T("&part=snippet,id,contentDetails,statistics&regionCode=%s")
 		_T("&maxResults=%d")
@@ -427,7 +411,9 @@ CString CBriefDoc::GetYoutubeTrendsAddress() const
 		theApp.GetProfileString(_T("Settings"), _T("GoogleApisKey")),
 		theApp.GetProfileString(_T("Settings"), _T("TrendsLocation"), _T("GB")),
 		theApp.GetProfileInt(_T("Settings"), _T("YoutubeMaxResults"), 10));
+#ifdef _DEBUG
 	TRACE(_T("Youtube address: %s\n"), sAddress);
+#endif
 	return sAddress;
 }
 

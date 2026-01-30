@@ -8,6 +8,8 @@
 
 #include "resource.h"						// main symbols
 
+const CString GoogleTrendsAddress = _T("https://trends.google.com/trending/rss?geo=");
+
 // CBriefApp:
 // See Brief.cpp for the implementation of this class
 //
