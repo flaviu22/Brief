@@ -1,3 +1,5 @@
+<img width="1918" height="1019" alt="image" src="https://github.com/user-attachments/assets/a84050be-9971-464d-9eb4-c4570dd6d318" />
+
 Introduction
 
 This application presents a set of essential information displayed in a single HTML‑based view, as follow:
