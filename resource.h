@@ -38,6 +38,7 @@
 #define ID_TIMER_LOCSEARCH              316
 #define IDD_DIALOG_GEO                  318
 #define ID_TIMER_RESETSTATUSTEXT        318
+#define ID_TIMER_FOREGROUND             319
 #define IDD_DIALOG_TIMEZONE             320
 #define IDD_DIALOG_SETTINGS             322
 #define IDI_SETTINGS                    324
@@ -96,6 +97,6 @@
 #define _APS_NEXT_RESOURCE_VALUE        326
 #define _APS_NEXT_COMMAND_VALUE         32806
 #define _APS_NEXT_CONTROL_VALUE         1021
-#define _APS_NEXT_SYMED_VALUE           319
+#define _APS_NEXT_SYMED_VALUE           320
 #endif
 #endif

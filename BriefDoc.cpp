@@ -331,7 +331,7 @@ void CBriefDoc::GetWeather(const CBriefView* pView)
 void CBriefDoc::GetGoogleTrends(const CBriefView* pView)
 {
 	auto output = GetEndpointResponse(
-		theApp.GetProfileString(_T("Settings"), _T("GoogleTrendsAddress"), GoogleTrendsAddress) +
+		theApp.GetProfileString(_T("Settings"), _T("GoogleTrendsAddress"), CString(google_trends_address.data())) +
 		theApp.GetProfileString(_T("Settings"), _T("TrendsLocation"), _T("GB")));
 
 	do

@@ -34,7 +34,12 @@ protected:  // control bar embedded members
 	CMFCStatusBar     m_wndStatusBar;
 
 private:
-	void ForceForegroundWindow();
+	void ForceForegroundWindowOrRetry();
+	// Helper: tries hard to bring hWnd to the foreground. Returns TRUE if it succeeded.
+	BOOL ForceForegroundWindow();
+
+private:
+	int m_nForeRetries{ 0 };
 
 // Generated message map functions
 protected:

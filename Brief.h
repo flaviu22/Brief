@@ -7,8 +7,11 @@
 #endif
 
 #include "resource.h"						// main symbols
+#include <string_view>
 
-const CString GoogleTrendsAddress = _T("https://trends.google.com/trending/rss?geo=");
+constexpr std::string_view google_trends_address = "https://trends.google.com/trending/rss?geo=";
+constexpr UINT FORE_MAX_RETRY = 3;
+constexpr UINT FORE_ELAPSE = 333;
 
 // CBriefApp:
 // See Brief.cpp for the implementation of this class

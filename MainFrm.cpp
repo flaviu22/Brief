@@ -204,7 +204,7 @@ void CMainFrame::OnTimer(UINT_PTR nIDEvent)
 		if (IsIconic())
 		{
 			ShowWindow(SW_RESTORE);
-			ForceForegroundWindow();
+			ForceForegroundWindowOrRetry();
 			SetTimer(ID_TIMER_MOVE, theApp.GetProfileInt(_T("Settings"), _T("MoveIntervalSeconds"), 77) * 1000, nullptr);
 		}
 		else
@@ -220,13 +220,64 @@ void CMainFrame::OnTimer(UINT_PTR nIDEvent)
 		PostMessage(WMU_SETSTATUSTEXT, STATUS_RESET, 0);
 	}
 
+	if (ID_TIMER_FOREGROUND == nIDEvent)
+	{
+		if (ForceForegroundWindow() || ++m_nForeRetries >= FORE_MAX_RETRY)
+			KillTimer(nIDEvent);
+	}
+
 	CFrameWndEx::OnTimer(nIDEvent);
 }
 
-void CMainFrame::ForceForegroundWindow()
+void CMainFrame::ForceForegroundWindowOrRetry()
 {
-	keybd_event(0, 0, 0, 0);
-	SetForegroundWindow();
+	if (ForceForegroundWindow())
+		return;
+
+	m_nForeRetries = 0;
+	SetTimer(ID_TIMER_FOREGROUND, FORE_ELAPSE, nullptr);
+}
+
+BOOL CMainFrame::ForceForegroundWindow()
+{
+	HWND hWnd = GetSafeHwnd();
+	if (!::IsWindow(hWnd))
+		return FALSE;
+
+	if (IsIconic())
+		ShowWindow(SW_RESTORE);
+
+	if (hWnd == ::GetForegroundWindow())	// is already foreground
+		return TRUE;
+
+	HWND hWndFore = ::GetForegroundWindow();
+	const DWORD dwForegroundThreadId = hWndFore ? ::GetWindowThreadProcessId(hWndFore, nullptr) : 0;
+	const DWORD dwThisThreadId = ::GetCurrentThreadId();
+
+	// Share the input state with the current foreground thread,
+	// which makes Windows treat us as "the process that received the last input".
+	BOOL bAttached = FALSE;
+	if (0 != dwForegroundThreadId && dwForegroundThreadId != dwThisThreadId)
+		bAttached = ::AttachThreadInput(dwForegroundThreadId, dwThisThreadId, TRUE);
+
+	::AllowSetForegroundWindow(ASFW_ANY);
+	BringWindowToTop();
+	BOOL bOk = SetForegroundWindow();
+	SetActiveWindow();
+//	SetFocus();
+
+	if (bAttached)
+		::AttachThreadInput(dwForegroundThreadId, dwThisThreadId, FALSE);
+
+	// Fallback: topmost / not-topmost trick
+	if (!bOk || hWnd != ::GetForegroundWindow())
+	{
+		SetWindowPos(&wndTopMost, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+		SetWindowPos(&wndNoTopMost, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+		bOk = SetForegroundWindow();
+	}
+
+	return bOk;
 }
 
 void CMainFrame::OnTimeChange()

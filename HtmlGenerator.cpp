@@ -384,7 +384,7 @@ void CHtmlGenerator::GenerateClock(Tag* parent, const size_t cityid) const
 	div1.AddChild({ "svg", std::move(clock_svg4.data()), { {{"class"}, {"DPACts"}}, {{"xmlns"}, {"http://www.w3.org/2000/svg"}}, {{"viewbox"}, {"0 0 112 112"}}, {{"style"}, {"transform: rotate(288deg);"}} } });
 	div.AddChild(div1);
 	Tag div2("div", { {{"class"}, {"DPACd"}}, {{"style"}, {"font-size: 27px; color: rgb(255, 255, 255); font-weight: normal;"}} });
-	div2.AddChild({ "span", "Fri, September 29", { {{"class"}, {"DPACdt"}}, } });
+	div2.AddChild({ "span", "Fri, June 15", { {{"class"}, {"DPACdt"}}, } });
 	Tag span1({ "span", { {{"class"}, {"DPACtn"}}, {{"style"}, {"width: 27px; height: 27px; border-color: rgb(255, 255, 255); display: none;"}} } });
 	span1.AddChild({ "i", { {{"style"}, {"background-color: rgb(255, 255, 255);"}} } });
 	div2.AddChild(span1);
