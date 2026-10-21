@@ -11,7 +11,7 @@
 
 constexpr std::string_view google_trends_address = "https://trends.google.com/trending/rss?geo=";
 constexpr UINT FORE_MAX_RETRY = 3;
-constexpr UINT FORE_ELAPSE = 333;
+constexpr UINT FORE_ELAPSE = 500;
 
 // CBriefApp:
 // See Brief.cpp for the implementation of this class

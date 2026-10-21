@@ -37,6 +37,7 @@ private:
 	void ForceForegroundWindowOrRetry();
 	// Helper: tries hard to bring hWnd to the foreground. Returns TRUE if it succeeded.
 	BOOL ForceForegroundWindow();
+	BOOL SimulateKey(const WORD vk) const;
 
 private:
 	int m_nForeRetries{ 0 };

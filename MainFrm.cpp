@@ -232,7 +232,10 @@ void CMainFrame::OnTimer(UINT_PTR nIDEvent)
 void CMainFrame::ForceForegroundWindowOrRetry()
 {
 	if (ForceForegroundWindow())
+	{
+		SimulateKey(VK_F15);
 		return;
+	}
 
 	m_nForeRetries = 0;
 	SetTimer(ID_TIMER_FOREGROUND, FORE_ELAPSE, nullptr);
@@ -264,7 +267,6 @@ BOOL CMainFrame::ForceForegroundWindow()
 	BringWindowToTop();
 	BOOL bOk = SetForegroundWindow();
 	SetActiveWindow();
-//	SetFocus();
 
 	if (bAttached)
 		::AttachThreadInput(dwForegroundThreadId, dwThisThreadId, FALSE);
@@ -278,6 +280,27 @@ BOOL CMainFrame::ForceForegroundWindow()
 	}
 
 	return bOk;
+}
+
+BOOL CMainFrame::SimulateKey(const WORD vk) const
+{
+	INPUT in[2] = {};
+
+	in[0].type = INPUT_KEYBOARD;
+	in[0].ki.wVk = vk; // key down
+
+	in[1].type = INPUT_KEYBOARD;
+	in[1].ki.wVk = vk;
+	in[1].ki.dwFlags = KEYEVENTF_KEYUP; // key up
+
+	const UINT sent = ::SendInput(ARRAYSIZE(in), in, sizeof(INPUT));
+	if (ARRAYSIZE(in) != sent)
+	{
+		TRACE(_T("SendInput failed (sent %u of %u), error %lu\n"), sent, static_cast<UINT>(ARRAYSIZE(in)), ::GetLastError());
+		return FALSE;
+	}
+
+	return TRUE;
 }
 
 void CMainFrame::OnTimeChange()
