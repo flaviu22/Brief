@@ -24,6 +24,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWndEx)
     ON_WM_TIMECHANGE()
 	ON_COMMAND(ID_CANCEL_RETRIEVE_DATA, &CMainFrame::OnCancelRetrieveData)
 	ON_MESSAGE(WMU_SETSTATUSTEXT, &CMainFrame::OnSetStatusText)
+	ON_MESSAGE(WMU_SIMULATEKEY, &CMainFrame::OnSimulateKey)
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -233,7 +234,7 @@ void CMainFrame::ForceForegroundWindowOrRetry()
 {
 	if (ForceForegroundWindow())
 	{
-		SimulateKey(VK_F15);
+		PostMessage(WMU_SIMULATEKEY, VK_F17);
 		return;
 	}
 
@@ -263,7 +264,6 @@ BOOL CMainFrame::ForceForegroundWindow()
 	if (0 != dwForegroundThreadId && dwForegroundThreadId != dwThisThreadId)
 		bAttached = ::AttachThreadInput(dwForegroundThreadId, dwThisThreadId, TRUE);
 
-	::AllowSetForegroundWindow(ASFW_ANY);
 	BringWindowToTop();
 	BOOL bOk = SetForegroundWindow();
 	SetActiveWindow();
@@ -280,27 +280,6 @@ BOOL CMainFrame::ForceForegroundWindow()
 	}
 
 	return bOk;
-}
-
-BOOL CMainFrame::SimulateKey(const WORD vk) const
-{
-	INPUT in[2] = {};
-
-	in[0].type = INPUT_KEYBOARD;
-	in[0].ki.wVk = vk; // key down
-
-	in[1].type = INPUT_KEYBOARD;
-	in[1].ki.wVk = vk;
-	in[1].ki.dwFlags = KEYEVENTF_KEYUP; // key up
-
-	const UINT sent = ::SendInput(ARRAYSIZE(in), in, sizeof(INPUT));
-	if (ARRAYSIZE(in) != sent)
-	{
-		TRACE(_T("SendInput failed (sent %u of %u), error %lu\n"), sent, static_cast<UINT>(ARRAYSIZE(in)), ::GetLastError());
-		return FALSE;
-	}
-
-	return TRUE;
 }
 
 void CMainFrame::OnTimeChange()
@@ -341,4 +320,25 @@ LRESULT CMainFrame::OnSetStatusText(WPARAM wParam, LPARAM lParam)
 	}
 
 	return 0;
+}
+
+LRESULT CMainFrame::OnSimulateKey(WPARAM wParam, LPARAM lParam)
+{
+	INPUT in[2] = {};
+
+	in[0].type = INPUT_KEYBOARD;
+	in[0].ki.wVk = static_cast<WORD>(wParam);	// key down
+
+	in[1].type = INPUT_KEYBOARD;
+	in[1].ki.wVk = static_cast<WORD>(wParam);
+	in[1].ki.dwFlags = KEYEVENTF_KEYUP; 		// key up
+
+	const UINT sent = ::SendInput(ARRAYSIZE(in), in, sizeof(INPUT));
+	if (ARRAYSIZE(in) != sent)
+	{
+		TRACE(_T("SendInput failed (sent %u of %u), error %lu\n"), sent, static_cast<UINT>(ARRAYSIZE(in)), ::GetLastError());
+		return FALSE;
+	}
+
+	return TRUE;
 }

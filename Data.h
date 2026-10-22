@@ -9,6 +9,7 @@
 #define WMU_THREADDATA						(WM_APP + 13)
 #define WMU_POSTINIT						(WM_APP + 14)
 #define WMU_SETSTATUSTEXT					(WM_APP + 15)
+#define WMU_SIMULATEKEY						(WM_APP + 16)
 
 constexpr UINT MESSAGE_EXTERNALIP_DONE = 1;
 constexpr UINT MESSAGE_GETLOCATION_DONE = 2;

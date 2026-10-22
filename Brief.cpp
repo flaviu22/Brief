@@ -184,7 +184,7 @@ BOOL CAboutDlg::OnInitDialog()
 	CString sFileName, sText;
 	GetModuleFileName(NULL, sFileName.GetBuffer(_MAX_PATH), _MAX_PATH);
 	sFileName.ReleaseBuffer();
-	sText.Format(_T("%s, Version %s"), theApp.m_pszAppName, GetAppVersion(sFileName));
+	sText.Format(_T("%s, Version %s"), theApp.m_pszAppName, GetAppVersion(sFileName, FALSE));
 	GetDlgItem(IDC_STATIC2)->SetWindowText(sText);
 
 	sText.Format(_T("Copyright (C) %s"), COleDateTime::GetCurrentTime().Format(_T("%Y")));
@@ -209,12 +209,12 @@ CString CAboutDlg::GetAppVersion(CString sFileName, BOOL bShortVersion/* = TRUE*
 			UINT nLenght = 0;
 			VS_FIXEDFILEINFO* lpFfi;
 			VerQueryValue(lpData.data(), _T("\\"), (LPVOID*)&lpFfi, &nLenght);
-			DWORD dwFileVersionMS = lpFfi->dwFileVersionMS;
-			DWORD dwFileVersionLS = lpFfi->dwFileVersionLS;
-			DWORD dwLeftMost = HIWORD(dwFileVersionMS);
-			DWORD dwSecondLeft = LOWORD(dwFileVersionMS);
-			DWORD dwSecondRight = HIWORD(dwFileVersionLS);
-			DWORD dwRightMost = LOWORD(dwFileVersionLS);
+			const DWORD dwFileVersionMS = lpFfi->dwFileVersionMS;
+			const DWORD dwFileVersionLS = lpFfi->dwFileVersionLS;
+			const DWORD dwLeftMost = HIWORD(dwFileVersionMS);
+			const DWORD dwSecondLeft = LOWORD(dwFileVersionMS);
+			const DWORD dwSecondRight = HIWORD(dwFileVersionLS);
+			const DWORD dwRightMost = LOWORD(dwFileVersionLS);
 			if (bShortVersion)
 				sVersion.Format(_T("%d.%d"), dwLeftMost, dwSecondLeft);
 			else
